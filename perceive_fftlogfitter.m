@@ -1,4 +1,5 @@
 function [nyd, nyl] = perceive_fftlogfitter(f, data, flow, fhigh)
+    
     % Fits a logarithmic function to the power spectrum
     % % Data should be in channels x frequencies
 
