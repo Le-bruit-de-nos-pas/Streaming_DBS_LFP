@@ -1,9 +1,11 @@
 function [spow, rpow] = perceive_power_normalization(pow, f, lim)
+
     % Set default frequency limits if 'lim' is not provided
     if ~exist('lim', 'var')
         lim = [5 45 55 95];
     end
 
+    
     % Determine frequency range based on 'lim'
     if size(lim, 2) == 4 && size(lim, 1) == 1
         frange = [perceive_sc(f, lim(1)):perceive_sc(f, lim(2)), perceive_sc(f, lim(3)):perceive_sc(f, lim(4)) ];
