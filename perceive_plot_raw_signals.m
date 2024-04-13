@@ -1,4 +1,5 @@
 function [raw, time, chanlabels, p] = perceive_plot_raw_signals(data, chanlabels, time)
+    
     % Check if 'data' is provided or prompt user to select a file
     if ~exist('data', 'var') || isempty(data)
         [files, path] = uigetfile('*.mat', 'Select exported percept fieldtrip .mat file', 'MultiSelect', 'on');
@@ -65,4 +66,5 @@ function [raw, time, chanlabels, p] = perceive_plot_raw_signals(data, chanlabels
         ylim([0, length(chanlabels) + 1]);
         title(strrep(fname, '_', ' '))
     end
+    
 end
