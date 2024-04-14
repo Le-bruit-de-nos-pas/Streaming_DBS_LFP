@@ -23,7 +23,7 @@ function ecg = perceive_ecg(data, fs, plotit)
 
         disp(['...running cross-correlation on ' num2str(a) ' segments...'])
 
-        ndata = zeros(1:4*dwindow); % Templatefor adjust to xcorr lags (4*segment window size)
+        ndata = zeros(1, 4*dwindow); % Templatefor adjust to xcorr lags (4*segment window size)
 
         nt = linspace(-2*dwindow/fs, size(ndata,2)/fs-2*dwindow/fs, size(ndata,2)); % time axis
 
