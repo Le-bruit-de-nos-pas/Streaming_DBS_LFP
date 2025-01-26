@@ -126,5 +126,95 @@ results_summary = {
 
 }
 
+
+
 results_summary
 
+
+
+
+import pandas as pd
+
+
+
+# Detailed breakdown: Stimulation parameters (Initial and Final Groups)
+
+initial_groups = results["stimulation_parameters"]["initial_groups"]
+
+final_groups = results["stimulation_parameters"]["final_groups"]
+
+
+
+# Simplify group information for easier visualization
+
+def extract_group_info(groups):
+
+    extracted = []
+
+    for group in groups:
+
+        group_id = group.get("GroupId", "Unknown")
+
+        active = group.get("ActiveGroup", False)
+
+        left_settings = group.get("ProgramSettings", {}).get("LeftHemisphere", {}).get("Programs", [])
+
+        right_settings = group.get("ProgramSettings", {}).get("RightHemisphere", {}).get("Programs", [])
+
+        extracted.append({
+
+            "GroupId": group_id,
+
+            "Active": active,
+
+            "Left_Programs": len(left_settings),
+
+            "Right_Programs": len(right_settings)
+
+        })
+
+    return pd.DataFrame(extracted)
+
+
+
+# Create summaries for initial and final groups
+
+initial_group_df = extract_group_info(initial_groups)
+
+final_group_df = extract_group_info(final_groups)
+
+
+
+# Impedance data overview
+
+impedance_data = results["impedance_data"]
+
+
+
+# Signal analysis overview
+
+sensing_channels = results["signal_analysis"].get("sensing_channels", [])
+
+
+
+# Create summary DataFrames
+
+impedance_df = pd.DataFrame(impedance_data)
+
+sensing_channel_df = pd.DataFrame(sensing_channels)
+
+
+
+# Display key summaries
+
+{
+
+    "initial_group_summary": initial_group_df,
+
+    "final_group_summary": final_group_df,
+
+    "impedance_data_overview": impedance_df.head(),
+
+    "sensing_channel_overview": sensing_channel_df.head()
+
+}
