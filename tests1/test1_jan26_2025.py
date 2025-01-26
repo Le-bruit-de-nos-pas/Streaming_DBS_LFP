@@ -330,3 +330,14 @@ def calculate_band_power(frequencies, psd_values, bands):
         mask = (np.array(frequencies) >= low) & (np.array(frequencies) <= high)
         band_powers[band] = np.sum(np.array(psd_values)[mask])
     return band_powers
+
+
+import matplotlib.pyplot as plt
+
+band_powers = calculate_band_power(frequencies, psd_values, frequency_bands)
+plt.bar(band_powers.keys(), band_powers.values(), color="skyblue", edgecolor="black")
+plt.title("Signal Frequency Band Power Distribution")
+plt.xlabel("Frequency Band")
+plt.ylabel("Power")
+plt.grid(axis="y", linestyle="--", alpha=0.7)
+plt.show()
