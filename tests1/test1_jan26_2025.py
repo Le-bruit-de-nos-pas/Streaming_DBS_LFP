@@ -320,3 +320,13 @@ frequency_bands = {
     "Beta": (12, 30),
     "Gamma": (30, 100),
 }
+
+
+
+
+def calculate_band_power(frequencies, psd_values, bands):
+    band_powers = {}
+    for band, (low, high) in bands.items():
+        mask = (np.array(frequencies) >= low) & (np.array(frequencies) <= high)
+        band_powers[band] = np.sum(np.array(psd_values)[mask])
+    return band_powers
