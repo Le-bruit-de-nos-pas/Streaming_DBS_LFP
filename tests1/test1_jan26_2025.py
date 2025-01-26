@@ -308,3 +308,15 @@ plt.grid(axis="y", linestyle="--", alpha=0.7)
 plt.tight_layout()
 
 plt.show()
+
+
+
+
+
+frequency_bands = {
+    "Delta": (0.5, 4),
+    "Theta": (4, 8),
+    "Alpha": (8, 12),
+    "Beta": (12, 30),
+    "Gamma": (30, 100),
+}
