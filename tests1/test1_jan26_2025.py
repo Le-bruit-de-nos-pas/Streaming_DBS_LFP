@@ -218,3 +218,93 @@ sensing_channel_df = pd.DataFrame(sensing_channels)
     "sensing_channel_overview": sensing_channel_df.head()
 
 }
+
+
+
+import matplotlib.pyplot as plt
+
+
+
+# Extract and plot PSD values and Signal Frequencies for sensing channels
+
+sensing_setup = sensing_channels[0].get("SensingSetup", {})
+
+frequencies = sensing_setup.get("ChannelSignalResult", {}).get("SignalFrequencies", [])
+
+psd_values = sensing_setup.get("ChannelSignalResult", {}).get("SignalPsdValues", [])
+
+
+
+# Plot PSD vs. Frequency
+
+plt.figure(figsize=(10, 6))
+
+plt.plot(frequencies, psd_values, label="PSD", color="blue", linewidth=2)
+
+plt.title("Power Spectral Density (PSD) vs Frequency", fontsize=14)
+
+plt.xlabel("Frequency (Hz)", fontsize=12)
+
+plt.ylabel("PSD Value", fontsize=12)
+
+plt.grid(True, linestyle="--", alpha=0.7)
+
+plt.legend()
+
+plt.show()
+
+
+
+# Impedance Data: Extract and simplify for visualization
+
+left_hemisphere = impedance_data[0]["Hemisphere"][0]["SessionImpedance"]
+
+right_hemisphere = impedance_data[0]["Hemisphere"][1]["SessionImpedance"]
+
+
+
+# Focus on Monopolar values for simplicity
+
+left_mono = pd.DataFrame(left_hemisphere["Monopolar"])
+
+right_mono = pd.DataFrame(right_hemisphere["Monopolar"])
+
+
+
+# Plot Monopolar Impedance for Left and Right Hemispheres
+
+plt.figure(figsize=(14, 6))
+
+
+
+plt.subplot(1, 2, 1)
+
+plt.bar(left_mono["Electrode2"], left_mono["ResultValue"], color="teal")
+
+plt.title("Left Hemisphere Monopolar Impedance", fontsize=14)
+
+plt.xticks(rotation=45, fontsize=10)
+
+plt.ylabel("Impedance (Ohms)", fontsize=12)
+
+plt.grid(axis="y", linestyle="--", alpha=0.7)
+
+
+
+plt.subplot(1, 2, 2)
+
+plt.bar(right_mono["Electrode2"], right_mono["ResultValue"], color="coral")
+
+plt.title("Right Hemisphere Monopolar Impedance", fontsize=14)
+
+plt.xticks(rotation=45, fontsize=10)
+
+plt.ylabel("Impedance (Ohms)", fontsize=12)
+
+plt.grid(axis="y", linestyle="--", alpha=0.7)
+
+
+
+plt.tight_layout()
+
+plt.show()
