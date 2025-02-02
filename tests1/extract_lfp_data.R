@@ -43,6 +43,58 @@ extract_lfp_data_and_plot <- function(data) {
   }
   
   
+    # Define frequency bands
+  frequency_bands <- list(
+    Delta = c(0.5, 4),
+    Theta = c(4, 8),
+    Alpha = c(8, 12),
+    Beta = c(12, 30),
+    Gamma = c(30, 100)
+  )
+
+  # Function to compute power in each frequency band
+  calculate_band_power <- function(frequencies, magnitudes, bands) {
+    sapply(bands, function(band) {
+      sum(magnitudes[frequencies >= band[1] & frequencies <= band[2]], na.rm = TRUE)
+    })
+  }
+  
+  # Compute band power for each electrode
+  band_power_results <- data.frame()
+  
+  unique_electrodes <- unique(structured_lfp_data$SensingElectrodes)
+  
+  for (electrode in unique_electrodes) {
+    electrode_data <- structured_lfp_data %>% filter(SensingElectrodes == electrode)
+    
+    # Ensure the data exists for processing
+    if (nrow(electrode_data) > 0) {
+      band_powers <- calculate_band_power(electrode_data$LFPFrequency, electrode_data$LFPMagnitude, frequency_bands)
+      
+      band_power_results <- rbind(band_power_results, data.frame(
+        SensingElectrodes = electrode,
+        Band = names(band_powers),
+        Power = band_powers
+      ))
+    }
+  }
+  
+  print(band_power_results)
+  
+  
+  # Visualize band power distribution
+  p1 <- band_power_results %>%
+    ggplot(aes(x = Band, y = Power, fill = Band)) +
+    geom_bar(stat = "identity", color = "black") +
+    facet_wrap(~SensingElectrodes) +  
+    labs(title = "Frequency Band Power Distribution per Electrode",
+         x = "Frequency Band",
+         y = "Power") +
+    theme_minimal()
+  
+  
+  print(p1)
+  
   
   
   # Loop through each unique electrode type and plot the LFP Frequency vs Magnitude
@@ -54,7 +106,7 @@ extract_lfp_data_and_plot <- function(data) {
   electrode_data <- structured_lfp_data %>% filter(SensingElectrodes == electrode)
   
   # Create the ggplot for LFP Frequency vs Magnitude
-  p <- electrode_data %>%
+  p2 <- electrode_data %>%
     ggplot(aes(LFPFrequency, LFPMagnitude, colour = Hemisphere, fill = Hemisphere)) +
     geom_point() +
     geom_line() +  # Add lines connecting the points
@@ -66,13 +118,23 @@ extract_lfp_data_and_plot <- function(data) {
     theme_minimal()  # Optional: Adjust the theme
   
   # Explicitly print the plot to ensure it renders
-  print(p)
+  print(p2)
 }
   
   
   
+    # Plot the time-domain signals for all sequences in the LFP montage
+  for (i in 1:length(data$LfpMontageTimeDomain$TimeDomainData)) {
+    time_domain_sequence <- data$LfpMontageTimeDomain$TimeDomainData[[i]]
+    plot(time_domain_sequence, type = "l", 
+         main = paste("Time-Domain Signal for Pass", i),
+         xlab = "Time (samples)", ylab = "Amplitude", 
+         col = rainbow(30)[i], lwd = 2)
+  }
+  
   
 
+  print(structured_lfp_data)
   
   # Return the structured LFP data
   return(structured_lfp_data)
